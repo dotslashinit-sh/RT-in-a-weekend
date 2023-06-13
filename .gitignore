@@ -1,0 +1,10 @@
+# IDE files
+.vs/*
+*.user
+
+# Build files
+x64/*
+Raytracer/x64/*
+
+# Output files
+*.bmp
