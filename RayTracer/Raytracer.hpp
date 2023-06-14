@@ -48,8 +48,8 @@ public:
 				Color pixelColor(0.1f, 0.1f, 0.1f);
 
 				for (size_t k = 0; k < SAMPLE_COUNT; ++k) {
-					float u = ((float)i + ((float)k/SAMPLE_COUNT)) / (m_width);
-					float v = ((float)j + ((float)k/SAMPLE_COUNT)) / (m_height);
+					float u = ((float)i + random_float()) / (m_width);
+					float v = ((float)j + random_float()) / (m_height);
 
 					Ray ray = camera.RayTo(u, v);;
 					HitRecord hitRecord;
