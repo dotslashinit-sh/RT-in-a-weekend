@@ -1,6 +1,4 @@
 #pragma once
-
-#include "Vec3.hpp"
 #include "Ray.hpp"
 #include "Utils.hpp"
 
@@ -11,7 +9,7 @@
 
 using std::vector;
 using std::shared_ptr, std::make_shared;
-using std::min, std::max, std::sqrt;
+using std::sqrt;
 
 struct HitRecord {
 	HitRecord() = default;
@@ -37,7 +35,7 @@ struct HitRecord {
 
 class Hittable abstract {
 public:
-	virtual bool isHit(Ray& r, HitRecord & rec, float tmin, float tmax) abstract;
+	virtual bool isHit(const Ray& r, HitRecord & rec, float tmin, float tmax) abstract;
 };
 
 class Sphere : public Hittable {
@@ -46,7 +44,7 @@ public:
 	Sphere() = delete;
 	Sphere(const Vec3& center, float radius) : m_center(center), m_radius(radius) { }
 
-	bool isHit(Ray& r, HitRecord & rec, float tmin, float tmax) override {
+	bool isHit(const Ray& r, HitRecord & rec, float tmin, float tmax) override {
 		auto oc = r.origin() - m_center;
 		auto a = r.direction().lengthsq();
 		auto half_b = dot(r.direction(), oc);
@@ -69,7 +67,7 @@ public:
 
 		rec.t = root;
 		rec.point = r.at(root);
-		rec.normal = (rec.point - m_center).unit();
+		rec.normal = (rec.point - m_center) / m_radius;
 
 		return true;
 	}
@@ -87,7 +85,7 @@ public:
 		m_objects.push_back(make_shared<Sphere>(center, radius));
 	}
 
-	bool isHit(Ray & r, HitRecord & rec, float tmin, float tmax) override {
+	bool isHit(const Ray & r, HitRecord & rec, float tmin, float tmax) override {
 		HitRecord temprec;
 		float closest = tmax;
 		bool hit = false;

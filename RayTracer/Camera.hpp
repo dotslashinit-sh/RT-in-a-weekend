@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Vec3.hpp"
 #include "Ray.hpp"
 
 class Camera {
