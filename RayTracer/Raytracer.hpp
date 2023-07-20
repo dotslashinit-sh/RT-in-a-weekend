@@ -12,6 +12,8 @@
 #include <iomanip>
 #include <limits>
 
+
+
 class RayTracer {
 public:
 	RayTracer() = delete;
