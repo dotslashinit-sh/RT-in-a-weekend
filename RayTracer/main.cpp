@@ -17,8 +17,8 @@ using std::setw;
 
 int main() {
     const char* filename = "output.bmp";
-    const size_t width = 711;
-    const size_t height = 400;
+    const size_t width = 400;
+    const size_t height = 225;
 
     cout << "Raytracer running with the following configuration" << endl;
     PRINT_CONFIG("Width", width);

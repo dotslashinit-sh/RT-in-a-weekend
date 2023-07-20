@@ -131,6 +131,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClInclude Include="Material.hpp">
+      <FileType>CppHeader</FileType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
