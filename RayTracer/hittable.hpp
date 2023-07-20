@@ -20,7 +20,7 @@ struct HitRecord {
 	HitRecord(const Ray & ray, double t_val, Normal outwardNorm, MaterialPtr material) :
 		t(t_val),
 		point(ray.at(t_val)),
-		normal(outwardNorm),
+		normal(outwardNorm.unit()),
 		isFrontFace(dot(ray.direction(), outwardNorm) < 0.0),
 		mat(material)
 	{
@@ -73,7 +73,9 @@ public:
 		//rec.t = root;
 		//rec.point = r.at(root);
 		//rec.normal = (rec.point - m_center) / m_radius;
-		rec.Set(r, root, rec.point- m_center, m_mat);
+
+		rec.Set(r, root, r.at(root) - m_center, m_mat);
+
 		return true;
 	}
 

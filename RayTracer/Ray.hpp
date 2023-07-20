@@ -6,7 +6,7 @@ class Ray {
 public:
 
 	Ray() : m_origin(), m_dir() { }
-	Ray(const Point& origin, const Vec3& direction) : m_origin(origin), m_dir(direction.unit()) { }
+	Ray(const Point& origin, const Vec3& direction) : m_origin(origin), m_dir(direction) { }
 
 	const Vec3 at(double t) const {
 		return m_origin + t * m_dir;
