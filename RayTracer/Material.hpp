@@ -31,17 +31,19 @@ private:
 
 class Metal final : public Material {
 public:
-	Metal(const Color & albedo) : m_albedo(albedo) {}
+	Metal(const Color & albedo, float fuzz) : m_albedo(albedo), m_fuzz(fuzz < 1 ? fuzz : 1) {}
 
 	bool Scatter(const Ray & ray_in, const HitRecord & rec, Color & attenuation, Ray & ray_out) override {
 		Vec3 reflected = reflect(ray_in.direction(), rec.normal);
-		ray_out = Ray(rec.point, reflected);
+		ray_out = Ray(rec.point, reflected + m_fuzz*rand_point_in_unit_s());
 		attenuation = m_albedo;
 		return dot(ray_out.direction(), rec.normal) > 0.0;
 	}
 
 private:
 	Color m_albedo;
+
+	float m_fuzz;
 };
 
 typedef std::shared_ptr<Material> MaterialPtr;

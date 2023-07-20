@@ -44,8 +44,8 @@ public:
 
 		MaterialPtr ground = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
 		MaterialPtr center = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-		MaterialPtr left = make_shared<Metal>(Color(0.8, 0.8, 0.8));
-		MaterialPtr right = make_shared<Metal>(Color(0.8, 0.6, 0.2));
+		MaterialPtr left = make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.5);
+		MaterialPtr right = make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
 
 		world.AddSphere(Point(0.0, -100.5, -1.0), 100.0, ground);
 		world.AddSphere(Point(0.0, 0.0, -1.0), 0.5, center);
