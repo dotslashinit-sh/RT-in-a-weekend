@@ -4,20 +4,20 @@
 
 class Camera {
 public:
-	Camera(const Point pos, const size_t width, const size_t height, float focalLength) : 
+	Camera(const Point pos, const size_t width, const size_t height, double focalLength) : 
 		m_width(width), m_height(height), m_position(pos),
 		m_vertical(), m_horizontal(), m_lowerleft()
 	{
-		auto aspectRatio = (float)m_width / m_height;
-		auto viewportHeight = 2.0f;
-		auto viewportWidth = aspectRatio * viewportHeight;
+		const auto aspectRatio = (double)m_width / m_height;
+		const auto viewportHeight = 2.0;
+		const auto viewportWidth = aspectRatio * viewportHeight;
 
-		m_vertical = Vec3(0.0f, viewportHeight, 0.0f);
-		m_horizontal = Vec3(viewportWidth, 0.0f, 0.0f);
-		m_lowerleft = m_position - m_horizontal / 2 - m_vertical / 2 - Vec3(0.0f, 0.0f, focalLength);
+		m_vertical = Vec3(0.0, viewportHeight, 0.0);
+		m_horizontal = Vec3(viewportWidth, 0.0, 0.0);
+		m_lowerleft = m_position - m_horizontal / 2 - m_vertical / 2 - Vec3(0.0, 0.0, focalLength);
 	}
 
-	Ray RayTo(float u, float v) const {
+	Ray RayTo(double u, double v) const {
 		return Ray(m_position, u*m_horizontal + v*m_vertical + m_lowerleft - m_position);
 	}
 

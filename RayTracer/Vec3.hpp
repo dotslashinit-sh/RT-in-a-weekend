@@ -5,23 +5,23 @@
 struct Vec3;
 
 // Used by Vec3::unit()
-Vec3 operator/(const Vec3& vec, const float val);
+Vec3 operator/(const Vec3& vec, const double val);
 
 struct Vec3 {
-	float x;
-	float y;
-	float z;
+	double x;
+	double y;
+	double z;
 
-	Vec3() : x(0.0f), y(0.0f), z(0.0f) { }
+	Vec3() : x(0.0), y(0.0), z(0.0) { }
 
-	Vec3(float xval, float yval, float zval) :
+	Vec3(double xval, double yval, double zval) :
 		x(xval), y(yval), z(zval) { }
 
-	const float length() const {
+	const double length() const {
 		return std::sqrt(this->lengthsq());
 	}
 
-	const float lengthsq() const {
+	const double lengthsq() const {
 		return x * x + y * y + z * z;
 	}
 
@@ -31,6 +31,11 @@ struct Vec3 {
 
 	Vec3 operator-() const {
 		return Vec3(-x, -y, -z);
+	}
+
+	bool nearZero() const {
+		double s = 1e-8;
+		return (fabs(x) < s) && (fabs(y) < s) && (fabs(z) < s);
 	}
 };
 
@@ -42,19 +47,23 @@ Vec3 operator-(const Vec3& lhs, const Vec3& rhs) {
 	return lhs + (-rhs);
 }
 
-Vec3 operator*(const Vec3& vec, const float val) {
+Vec3 operator*(const Vec3& vec, const double val) {
 	return Vec3(vec.x * val, vec.y * val, vec.z * val);
 }
 
-Vec3 operator*(const float val, const Vec3& vec) {
+Vec3 operator*(const double val, const Vec3& vec) {
 	return vec * val;
 }
 
-Vec3 operator/(const Vec3& vec, const float val) {
-	return vec * (1.0f / val);
+Vec3 operator*(const Vec3& lhs, const Vec3& rhs) {
+	return Vec3(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z);
 }
 
-float dot(const Vec3& a, const Vec3& b) {
+Vec3 operator/(const Vec3& vec, const double val) {
+	return Vec3(vec.x / val, vec.y / val, vec.z / val);
+}
+
+double dot(const Vec3& a, const Vec3& b) {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 

@@ -11,40 +11,45 @@ using std::vector;
 using std::shared_ptr, std::make_shared;
 using std::sqrt;
 
+class Material;
+typedef shared_ptr<Material> MaterialPtr;
+
 struct HitRecord {
 	HitRecord() = default;
 
-	HitRecord(const Ray & ray, float t_val, Normal outwardNorm) :
+	HitRecord(const Ray & ray, double t_val, Normal outwardNorm, MaterialPtr material) :
 		t(t_val),
 		point(ray.at(t_val)),
 		normal(outwardNorm.unit()),
-		isFrontFace(dot(ray.direction(), outwardNorm) < 0.0)
+		isFrontFace(dot(ray.direction(), outwardNorm.unit()) < 0.0),
+		mat(material)
 	{
 		normal = isFrontFace ? normal : -normal;
 	}
 
-	float t = 0.0f;
+	double t = 0.0;
 	bool isFrontFace = false;
 	Point point = Vec3();
 	Normal normal = Vec3();
+	MaterialPtr mat;
 
-	void Set(const Ray & ray, float t_val, const Vec3 & outwardNorm) {
-		*this = HitRecord(ray, t_val, outwardNorm);
+	void Set(const Ray & ray, double t_val, const Vec3 & outwardNorm, MaterialPtr m) {
+		*this = HitRecord(ray, t_val, outwardNorm, m);
 	}
 };
 
 class Hittable abstract {
 public:
-	virtual bool isHit(const Ray& r, HitRecord & rec, float tmin, float tmax) abstract;
+	virtual bool isHit(const Ray& r, HitRecord & rec, double tmin, double tmax) abstract;
 };
 
 class Sphere : public Hittable {
 public:
 
 	Sphere() = delete;
-	Sphere(const Vec3& center, float radius) : m_center(center), m_radius(radius) { }
+	Sphere(const Vec3& center, double radius, MaterialPtr mat) : m_center(center), m_radius(radius), m_mat(mat) { }
 
-	bool isHit(const Ray& r, HitRecord & rec, float tmin, float tmax) override {
+	bool isHit(const Ray& r, HitRecord & rec, double tmin, double tmax) override {
 		auto oc = r.origin() - m_center;
 		auto a = r.direction().lengthsq();
 		auto half_b = dot(r.direction(), oc);
@@ -65,29 +70,30 @@ public:
 			}
 		}
 
-		rec.t = root;
-		rec.point = r.at(root);
-		rec.normal = (rec.point - m_center) / m_radius;
-
+		//rec.t = root;
+		//rec.point = r.at(root);
+		//rec.normal = (rec.point - m_center) / m_radius;
+		rec.Set(r, root, rec.point- m_center, m_mat);
 		return true;
 	}
 
 private:
 	Point m_center;
-	float m_radius;
+	double m_radius;
+	MaterialPtr m_mat;
 };
 
 class World : public Hittable {
 public:
 	World() : m_objects() {}
 
-	void AddSphere(Point center, float radius) {
-		m_objects.push_back(make_shared<Sphere>(center, radius));
+	void AddSphere(Point center, double radius, MaterialPtr mat) {
+		m_objects.push_back(make_shared<Sphere>(center, radius, mat));
 	}
 
-	bool isHit(const Ray & r, HitRecord & rec, float tmin, float tmax) override {
+	bool isHit(const Ray & r, HitRecord & rec, double tmin, double tmax) override {
 		HitRecord temprec;
-		float closest = tmax;
+		double closest = tmax;
 		bool hit = false;
 		for (auto& object : m_objects) {
 			if (object->isHit(r, temprec, tmin, closest)) {
