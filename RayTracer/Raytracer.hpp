@@ -52,7 +52,10 @@ public:
 		world.AddSphere(Point(-1.0, 0.0, -1.0), -0.5, left);
 		world.AddSphere(Point(1.0, 0.0, -1.0), 0.5, right);
 
-		Camera camera(m_width, m_height, 20, Vec3(-2, 2, 1), Vec3(0, 0, -1), Vec3(0, 1, 0));
+		Point lookfrom(-2, 2, 1), lookat(0, 0, -1);
+		auto focus_dist = (lookfrom - lookat).length(), aperture = 2.0;
+
+		Camera camera(m_width, m_height, 20, lookfrom, lookat, Vec3(0, 1, 0), focus_dist, aperture);
 
 		constexpr int MAX_REFLECT = 5;
 		auto scale = 1.0 / SAMPLE_COUNT;

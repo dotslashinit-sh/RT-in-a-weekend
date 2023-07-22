@@ -77,6 +77,13 @@ inline Point rand_point_in_unit_s() {
 	}
 }
 
+inline Point rand_point_in_unit_disk() {
+	while (true) {
+		Point p(random_double(-1, 1), random_double(-1, 1), 0);
+		if (p.lengthsq() < 1) return p;
+	}
+}
+
 inline Point rand_point_in_hemisphere(const Vec3& normal) {
 	Point in_unit_s = rand_point_in_unit_s();
 	if (dot(in_unit_s, normal) > 0.0) {
