@@ -44,15 +44,15 @@ public:
 
 		MaterialPtr ground = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
 		MaterialPtr center = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-		MaterialPtr left = make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.5);
+		MaterialPtr left = make_shared<Dielectric>(1.5);
 		MaterialPtr right = make_shared<Metal>(Color(0.8, 0.6, 0.2), 1.0);
 
 		world.AddSphere(Point(0.0, -100.5, -1.0), 100.0, ground);
 		world.AddSphere(Point(0.0, 0.0, -1.0), 0.5, center);
-		world.AddSphere(Point(-1.0, 0.0, -1.0), 0.5, left);
+		world.AddSphere(Point(-1.0, 0.0, -1.0), -0.5, left);
 		world.AddSphere(Point(1.0, 0.0, -1.0), 0.5, right);
 
-		Camera camera(Point(0.0, 0.0, 0.0), m_width, m_height, 1.0);
+		Camera camera(m_width, m_height, 20, Vec3(-2, 2, 1), Vec3(0, 0, -1), Vec3(0, 1, 0));
 
 		constexpr int MAX_REFLECT = 5;
 		auto scale = 1.0 / SAMPLE_COUNT;
@@ -63,8 +63,8 @@ public:
 				Color pixelColor;
 
 				for (size_t k = 0; k < SAMPLE_COUNT; ++k) {
-					double u = ((double)i + random_float()) / (m_width - 1);
-					double v = ((double)j + random_float()) / (m_height - 1);
+					double u = ((double)i + random_double()) / (m_width - 1);
+					double v = ((double)j + random_double()) / (m_height - 1);
 
 					Ray ray = camera.RayTo(u, v);
 					pixelColor += ColorAt(ray, world, MAX_REFLECT);

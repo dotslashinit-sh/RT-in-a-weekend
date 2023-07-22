@@ -46,4 +46,39 @@ private:
 	float m_fuzz;
 };
 
+class Dielectric : public Material {
+public:
+	Dielectric(double ir) : m_ir(ir) {}
+
+	bool Scatter(const Ray & ray, const HitRecord & record, Color & attenuation, Ray & ray_out) override {
+		attenuation = Color(1.0, 1.0, 1.0);
+		double ir = record.isFrontFace ? (1.0 / m_ir) : m_ir;
+		auto r_dir = ray.direction().unit();
+
+		auto cthetha = fmin(dot(-r_dir, record.normal.unit()), 1.0);
+		auto sthetha = sqrt(1.0 - cthetha * cthetha);
+
+		Vec3 direction;
+		bool cannot_refract = sthetha * ir > 1.0;
+		if (cannot_refract || reflectance(cthetha, ir) > random_double()) {
+			direction = reflect(r_dir, record.normal);
+		}
+		else {
+			direction = refract(r_dir, record.normal, ir);
+		}
+
+		ray_out = Ray(record.point, direction);
+		return true;
+	}
+
+private:
+	double m_ir;
+
+	static double reflectance(double cosine, double ir) {
+		auto r0 = (1 - ir) / (1 + ir);
+		r0 = r0 * r0;
+		return r0 + (1 - r0) * pow((1 - cosine), 5);
+	}
+};
+
 typedef std::shared_ptr<Material> MaterialPtr;
